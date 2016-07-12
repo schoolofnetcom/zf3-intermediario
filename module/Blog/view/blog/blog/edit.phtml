@@ -1,0 +1,34 @@
+<h1>Edit Post</h1>
+
+<?php
+
+$title = $form->get('title');
+$title->setAttribute('class', 'form-control');
+
+$content = $form->get('content');
+$content->setAttribute('class', 'form-control');
+
+$submit = $form->get('submit');
+$submit->setAttribute('class', 'btn btn-primary');
+
+$form->setAttribute('action', $this->url('post', ['action' => 'edit', 'id' => $id]));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+?>
+
+<div class="form-group">
+    <?= $this->formLabel($title); ?>
+    <?= $this->formElement($title); ?>
+</div>
+
+<div class="form-group">
+    <?= $this->formLabel($content); ?>
+    <?= $this->formElement($content); ?>
+</div>
+
+<?php
+echo $this->formSubmit($submit);
+echo $this->formHidden($form->get('id'));
+echo $this->form()->closeTag();
+?>

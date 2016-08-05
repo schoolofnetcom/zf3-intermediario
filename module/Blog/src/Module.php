@@ -3,12 +3,20 @@
 namespace Blog;
 
 use Blog\Controller\BlogController;
-use Zend\Db\Adapter\AdapterInterface;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
+use Blog\Controller\Factory\BlogControllerFactory;
+use Blog\Controller\Factory\PostControllerFactory;
+use Blog\Controller\PostController;
+use Blog\Form\Factory\PostFormFactory;
+use Blog\Form\PostForm;
+use Blog\Model\Factory\CommentTableFactory;
+use Blog\Model\Factory\CommentTableGatewayFactory;
+use Blog\Model\Factory\PostTableFactory;
+use Blog\Model\Factory\PostTableGatewayFactory;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ControllerProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
-class Module implements ConfigProviderInterface
+class Module implements ConfigProviderInterface, ServiceProviderInterface, ControllerProviderInterface
 {
 
     public function getConfig()
@@ -20,16 +28,11 @@ class Module implements ConfigProviderInterface
     {
         return [
             'factories' => [
-                Model\PostTable::class => function ($container) {
-                    $tableGateway = $container->get(Model\PostTableGateway::class);
-                    return new Model\PostTable($tableGateway);
-                },
-                Model\PostTableGateway::class => function ($container) {
-                    $dbAdapter = $container->get(AdapterInterface::class);
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Model\Post());
-                    return new TableGateway('post', $dbAdapter, null, $resultSetPrototype);
-                }
+                Model\PostTable::class => PostTableFactory::class,
+                Model\PostTableGateway::class => PostTableGatewayFactory::class,
+                PostForm::class => PostFormFactory::class,
+                Model\CommentTable::class => CommentTableFactory::class,
+                Model\CommentTableGateway::class => CommentTableGatewayFactory::class,
             ]
         ];
     }
@@ -38,11 +41,8 @@ class Module implements ConfigProviderInterface
     {
         return [
             'factories' => [
-                BlogController::class => function ($container) {
-                    return new BlogController(
-                        $container->get(Model\PostTable::class)
-                    );
-                }
+                BlogController::class => BlogControllerFactory::class,
+                PostController::class => PostControllerFactory::class
             ]
         ];
     }

@@ -1,0 +1,25 @@
+<?php $this->headTitle("Blog"); ?>
+<div class="row">
+    <h1>Posts da SON</h1>
+
+    <div class="col-md-10">
+        <ul class="list-unstyled">
+            <?php foreach ($posts as $post): ?>
+                <li>
+                    <div class="jumbotron">
+                        <h2><?= $this->escapeHtml($post->title); ?></h2>
+                        <p><?= substr($post->content, 0, 20) ?></p>
+                        <p>
+                            <a href="<?= $this->url('site-post', ['action' => 'show', 'id' => $post->id])?>"
+                               class="btn btn-primary btn-lg">
+                                Leia Mais
+                            </a>
+                        </p>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+
+        </ul>
+    </div>
+
+</div>

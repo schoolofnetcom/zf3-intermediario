@@ -16,10 +16,15 @@ class BlogController extends AbstractActionController
      * @var PostTable
      */
     private $table;
+    /**
+     * @var PostForm
+     */
+    private $form;
 
-    public function __construct(PostTable $table)
+    public function __construct(PostTable $table, PostForm $form)
     {
         $this->table = $table;
+        $this->form = $form;
     }
 
     public function indexAction()
@@ -33,7 +38,7 @@ class BlogController extends AbstractActionController
 
     public function addAction()
     {
-        $form = new PostForm();
+        $form = $this->form;
         $form->get('submit')->setValue('Add Post');
 
         $request = $this->getRequest();
@@ -51,7 +56,7 @@ class BlogController extends AbstractActionController
         $post = new Post();
         $post->exchangeArray($form->getData());
         $this->table->save($post);
-        return $this->redirect()->toRoute('post');
+        return $this->redirect()->toRoute('admin-blog/post');
     }
 
     public function editAction()
@@ -59,16 +64,16 @@ class BlogController extends AbstractActionController
         $id = (int)$this->params()->fromRoute('id', 0);
 
         if (!$id) {
-            return $this->redirect()->toRoute('post');
+            return $this->redirect()->toRoute('admin-blog/post');
         }
 
         try {
             $post = $this->table->find($id);
         } catch (\Exception $e) {
-            return $this->redirect()->toRoute('post');
+            return $this->redirect()->toRoute('admin-blog/post');
         }
 
-        $form = new PostForm();
+        $form = $this->form;
         $form->bind($post);
         $form->get('submit')->setAttribute('value', 'Edit Post');
 
@@ -90,18 +95,18 @@ class BlogController extends AbstractActionController
         }
 
         $this->table->save($post);
-        return $this->redirect()->toRoute('post');
+        return $this->redirect()->toRoute('admin-blog/post');
     }
 
     public function deleteAction()
     {
         $id = (int)$this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('post');
+            return $this->redirect()->toRoute('admin-blog/post');
         }
 
         $this->table->delete($id);
-        return $this->redirect()->toRoute('post');
+        return $this->redirect()->toRoute('admin-blog/post');
         
     }
 

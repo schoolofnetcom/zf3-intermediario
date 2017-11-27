@@ -32,7 +32,7 @@ $commentForm->prepare();
         ?>
         <br/><br/><br/>
         <ul>
-            <? foreach ($post->comments as $comment): ?>
+            <? foreach (array_reverse($post->comments) as $comment): ?>
                 <li><?= $this->escapeHtml($comment->content) ?></li>
             <? endforeach; ?>
         </ul>

@@ -42,13 +42,13 @@ class PostController extends AbstractActionController
         $id = (int)$this->params()->fromRoute('id', 0);
         $commentForm = new CommentForm();
         if (!$id) {
-            return $this->redirect()->toRoute('post');
+            return $this->redirect()->toRoute('site-post');
         }
 
         try {
             $post = $this->table->find($id);
         } catch (\Exception $e) {
-            return $this->redirect()->toRoute('post');
+            return $this->redirect()->toRoute('site-post');
         }
 
         return new ViewModel([
